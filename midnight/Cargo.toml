@@ -4,4 +4,8 @@ version = "0.1.0"
 authors = ["alex"]
 
 [dependencies]
-piston_window = "0.34.0"
+piston = "0.17.0"
+sdl2 = "0.13.0"
+pistoncore-sdl2_window = "0.23.0"
+fps_counter = "0.2.0"
+
