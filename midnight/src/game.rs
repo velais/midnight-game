@@ -20,14 +20,14 @@ impl Game {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
             .for_folder("assets").unwrap();
 
-        let guy = assets.join("guy.png");
+        let guy = assets.join("cube.png");
         let guy = Rc::new(Texture::from_path(guy).unwrap());
 
-        let mut guy_sprite = Sprite::from_texture(guy);
-        guy_sprite.set_position(100.0, 100.0);
+        let mut cubesprite = Sprite::from_texture(guy);
+        cubesprite.set_position(100.0, 100.0);
 
         let mut scene: Scene<Texture> = Scene::new();
-        let id = scene.add_child(guy_sprite);
+        let id = scene.add_child(cubesprite);
 
         Game {
             scene: scene
