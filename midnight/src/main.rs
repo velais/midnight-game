@@ -6,6 +6,7 @@ extern crate opengl_graphics;
 extern crate graphics;
 extern crate sprite;
 extern crate uuid;
+extern crate cgmath;
 
 
 use sdl2_window::{ Sdl2Window, OpenGL };
@@ -13,10 +14,12 @@ use piston::window::{ Size, Window, AdvancedWindow, OpenGLWindow, WindowSettings
 use piston::event_loop::{ Events, EventLoop };
 use opengl_graphics::{ GlGraphics, Texture, TextureSettings };
 use game::Game;
+use cgmath::Point2;
 
 
 mod game;
 mod world;
+mod util;
 
 pub fn main() {
     let opengl = OpenGL::V3_2;
@@ -34,8 +37,9 @@ pub fn main() {
     let mut fps_counter = fps_counter::FPSCounter::new();
 
     let mut game = Game::new();
+    game.load_scene();
 
-    let mut cursor = [0.0, 0.0];
+    let mut cursor: Point2<f64> = Point2::new(0.0, 0.0);
 
     let mut events = window.events().ups(60).max_fps(100);
     while let Some(e) = events.next(&mut window) {
@@ -56,17 +60,17 @@ pub fn main() {
 
                 game.render(&args, &mut gl);
             }
-            Event::AfterRender(_) => {}
             Event::Update(args) => {
                 game.update(&args);
             }
-            Event::Input(Press(Mouse(LeftMouseButton))) => {
-                println!("Mouse at: '{} {}'", cursor.get(0).unwrap(), cursor.get(1).unwrap());
+            Event::Input(ref input) => {
+                game.input(&input, &cursor);
             }
             _ => {}
         }
         e.mouse_cursor(|x, y| {
-            cursor = [x, y];
+            cursor.x = x;
+            cursor.y = y;
         });
     }
 }
