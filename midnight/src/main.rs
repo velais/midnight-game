@@ -4,6 +4,7 @@ extern crate sdl2_window;
 extern crate fps_counter;
 extern crate opengl_graphics;
 extern crate graphics;
+extern crate gl;
 extern crate sprite;
 extern crate uuid;
 extern crate cgmath;
@@ -19,10 +20,11 @@ use cgmath::Point2;
 
 mod game;
 mod world;
+mod camera;
 mod util;
 
 pub fn main() {
-    let opengl = OpenGL::V3_2;
+    let opengl = OpenGL::V4_0;
 
     let mut window: Sdl2Window = WindowSettings::new(
         "Midnight",

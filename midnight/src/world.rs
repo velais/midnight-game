@@ -27,8 +27,8 @@ pub struct Level {
 
 impl Level {
     pub fn new() -> Level {
-        let width = 12;
-        let height = 12;
+        let width = 48;
+        let height = 48;
         let mut map = Vec::with_capacity(10);
         for i in 0..(width * height) {
             map.push(Tile::new());
@@ -42,16 +42,20 @@ impl Level {
         }
     }
 
-    pub fn tile_for_point(&self, pt: Point2<f64>) -> &Tile {
-        println!("tile for '{} {}'", pt.x, pt.y);
+    pub fn tile_for_point(&self, pt: Point2<f64>) -> Option<&Tile> {
+        //println!("tile for '{} {}'", pt.x, pt.y);
         let col = (pt.x as usize / self.tile_size) as usize;
         let row = (pt.y as usize / self.tile_size) as usize;
-        println!("col: {} row: {}", col, row);
+        //println!("col: {} row: {}", col, row);
         let index = (row * self.width) + col;
-        println!("index: {}", index);
+        //println!("index: {}", index);
 
-        println!("map: {}", self.map.len());
-        self.map.get(index).unwrap()
+        //println!("map: {}", self.map.len());
+        self.map.get(index)
+    }
+
+    pub fn get_view(&self, pt: Point2<f64>, width: f64, height: f64) {
+        
     }
 }
 
