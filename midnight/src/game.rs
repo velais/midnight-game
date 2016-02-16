@@ -27,6 +27,7 @@ pub struct Game {
     world: World,
     texture1: Rc<Texture>,
     texture2: Rc<Texture>,
+    texture3: Rc<Texture>,
     mouse: Point2<f64>,
 }
 
@@ -35,11 +36,14 @@ impl Game {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
             .for_folder("assets").unwrap();
 
-        let cube_green = assets.join("dirt_1.png");
-        let cube_green_texture = Rc::new(Texture::from_path(cube_green).unwrap());
+        let asset_1 = assets.join("dirt_1.png");
+        let texture_1 = Rc::new(Texture::from_path(asset_1).unwrap());
 
-        let cube_blue = assets.join("cube_blue.png");
-        let cube_blue_texture = Rc::new(Texture::from_path(cube_blue).unwrap());
+        let asset_2 = assets.join("dirt_tree_1.png");
+        let texture_2 = Rc::new(Texture::from_path(asset_2).unwrap());
+
+        let asset_3 = assets.join("dirt_tree_2.png");
+        let texture_3 = Rc::new(Texture::from_path(asset_3).unwrap());
 
         let mut scene: Scene<Texture> = Scene::new();
         let mut world = World::new();
@@ -49,8 +53,9 @@ impl Game {
             camera: camera,
             scene: scene,
             world: world,
-            texture1: cube_green_texture.clone(),
-            texture2: cube_blue_texture.clone(),
+            texture1: texture_1.clone(),
+            texture2: texture_2.clone(),
+            texture3: texture_3.clone(),
             mouse: Point2::new(0.0, 0.0),
         }
     }
@@ -64,11 +69,16 @@ impl Game {
             for j in 0..level.width {
                 let index = (i * level.width) + j;
                 let mut tile = level.map.get_mut(index).unwrap();
-                let mut sprite = Sprite::from_texture(self.texture1.clone());
+                let mut sprite = match tile.tex_code {
+                   0 ... 17 => Sprite::from_texture(self.texture1.clone()),
+                   18 => Sprite::from_texture(self.texture2.clone()),
+                   19 => Sprite::from_texture(self.texture3.clone()),
+                   _ => panic!("aahhh")
+                };
                 let x = (j as f64) * level.tile_size as f64;
                 let y = (i as f64) * level.tile_size as f64;
                 let iso_pt = util::toIso(Point2::new(x, y));
-                sprite.set_anchor(0.0, 0.0);
+                sprite.set_anchor(1.0, 1.0);
                 sprite.set_position((iso_pt.x)+offset_x, (iso_pt.y)+offset_y);
                 let id = self.scene.add_child(sprite);
                 tile.set_sprite_id(id);
@@ -121,18 +131,18 @@ impl Game {
                 .trans(self.camera.x, self.camera.y)
                 .zoom(self.camera.zoom);
 
-            //self.scene.draw(transform, g);
-            self.draw_grid(line, &c.draw_state, transform, g);
+            self.scene.draw(transform, g);
+            //self.draw_grid(line, &c.draw_state, transform, g);
         });
     }
 
     pub fn update(&mut self, args: &UpdateArgs) {
         self.camera.update();
         
-        let twoDPt = util::to2D(self.mouse);
+        let (x, y) = util::to2DT(self.mouse.x, self.mouse.y);
         let ref level = self.world.get_level();
         let ref mut scene = self.scene;
-        level.tile_for_point(twoDPt)
+        level.tile_for_pointT(x, y)
             .and_then(|tile| tile.sprite_id)
             .and_then(|id| scene.child_mut(id))
             .map(|sprite| sprite.set_visible(false));
@@ -140,7 +150,7 @@ impl Game {
     }
     
 
-    pub fn input(&mut self, input: &Input, cursor: &Point2<f64>) {
+    pub fn input(&mut self, input: &Input) {
         use piston::input::Input::{Press, Release, Move};
         use piston::input::Button::{Mouse, Keyboard};
         use piston::input::Key;
@@ -152,6 +162,7 @@ impl Game {
                 self.mouse.x = x;
                 self.mouse.y = y;
             }
+            /*
             Press(Mouse(LeftMouseButton)) => {
                 println!("Mouse here: '{} {}'", cursor.x, cursor.y);
                 let mut twoDPt = util::to2D(*cursor);
@@ -165,6 +176,7 @@ impl Game {
                 //println!("bounding: {}", sprite.bounding_box().get(0).unwrap());
                 self.scene.remove_child(sprite_id);
             }
+            */
 
             Press(Keyboard(Left)) | Press(Keyboard(A)) => {
                 self.camera.dx = 10.0;

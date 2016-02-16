@@ -13,3 +13,11 @@ pub fn to2D(point: Point2<f64>) -> Point2<f64> {
     tempPt.y = 2.0 * point.y - point.x;
     tempPt
 }
+
+pub fn toIsoT(x: f64, y: f64) -> (f64, f64) {
+    ((x - y) / 2.0, ((x + y) / 2.0) / 2.0)
+}
+
+pub fn to2DT(x: f64, y: f64) -> (f64, f64) {
+    (2.0 * y + x, 2.0 * y - x)
+}

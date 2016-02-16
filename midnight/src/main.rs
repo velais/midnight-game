@@ -8,6 +8,7 @@ extern crate gl;
 extern crate sprite;
 extern crate uuid;
 extern crate cgmath;
+extern crate rand;
 
 
 use sdl2_window::{ Sdl2Window, OpenGL };
@@ -41,16 +42,9 @@ pub fn main() {
     let mut game = Game::new();
     game.load_scene();
 
-    let mut cursor: Point2<f64> = Point2::new(0.0, 0.0);
-
-    let mut events = window.events().ups(60).max_fps(100);
+    let mut events = window.events().ups(60).max_fps(10000);
     while let Some(e) = events.next(&mut window) {
         use piston::input::Event;
-        use piston::input::Input::{ Press };
-        use piston::input::Button::{ Mouse };
-        use piston::input::MouseButton::{ Left };
-        use piston::input::mouse::MouseCursorEvent;
-
 
         match e {
             Event::Render(args) => {
@@ -66,13 +60,9 @@ pub fn main() {
                 game.update(&args);
             }
             Event::Input(ref input) => {
-                game.input(&input, &cursor);
+                game.input(&input);
             }
             _ => {}
         }
-        e.mouse_cursor(|x, y| {
-            cursor.x = x;
-            cursor.y = y;
-        });
     }
 }
