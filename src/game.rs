@@ -39,7 +39,7 @@ impl Game {
         let asset_1 = assets.join("dirt_1.png");
         let texture_1 = Rc::new(Texture::from_path(asset_1).unwrap());
 
-        let asset_2 = assets.join("dirt_tree_1.png");
+        let asset_2 = assets.join("grass_tree_tall_1.png");
         let texture_2 = Rc::new(Texture::from_path(asset_2).unwrap());
 
         let asset_3 = assets.join("dirt_tree_2.png");
@@ -70,16 +70,16 @@ impl Game {
                 let index = (i * level.width) + j;
                 let mut tile = level.map.get_mut(index).unwrap();
                 let mut sprite = match tile.tex_code {
-                   0 ... 17 => Sprite::from_texture(self.texture1.clone()),
-                   18 => Sprite::from_texture(self.texture2.clone()),
+                   0 ... 10 => Sprite::from_texture(self.texture1.clone()),
+                   11 ... 18 => Sprite::from_texture(self.texture1.clone()),
                    19 => Sprite::from_texture(self.texture3.clone()),
                    _ => panic!("aahhh")
                 };
-                let x = (j as f64) * level.tile_size as f64;
-                let y = (i as f64) * level.tile_size as f64;
+                let x = (j as f64) * (level.tile_width as f64);
+                let y = (i as f64) * (level.tile_height as f64 * 2.0);
                 let iso_pt = util::toIso(Point2::new(x, y));
-                sprite.set_anchor(1.0, 1.0);
-                sprite.set_position((iso_pt.x)+offset_x, (iso_pt.y)+offset_y);
+                sprite.set_anchor(0.0, 0.0);
+                sprite.set_position(iso_pt.x, iso_pt.y);
                 let id = self.scene.add_child(sprite);
                 tile.set_sprite_id(id);
 
@@ -94,22 +94,22 @@ impl Game {
                      g: &mut GlGraphics) 
     {
         let level = self.world.get_level();
-        let width = (level.width * level.tile_size) as f64;
-        let height = (level.height * level.tile_size) as f64;
+        let width = (level.width * level.tile_width) as f64;
+        let height = (level.height * level.tile_height) as f64;
         for i in 0..level.width+1 {
             for j in 0..level.height+1 {
-                let h_x1 = (i * level.tile_size) as f64;
+                let h_x1 = (i * level.tile_width) as f64;
                 let h_y1 = 0.0;
-                let h_x2 = (i * level.tile_size) as f64;
+                let h_x2 = (i * level.tile_width) as f64;
                 let h_y2 = height;
                 let h_iso1 =  util::toIso(Point2::new(h_x1, h_y1));
                 let h_iso2 =  util::toIso(Point2::new(h_x2, h_y2));
                 line.draw([h_iso1.x, h_iso1.y, h_iso2.x, h_iso2.y], draw_state, transform, g);
 
                 let v_x1 =  0.0;
-                let v_y1 = (j * level.tile_size) as f64;
+                let v_y1 = (j * level.tile_height) as f64;
                 let v_x2 = width;
-                let v_y2 = (j * level.tile_size) as f64;
+                let v_y2 = (j * level.tile_width) as f64;
                 let v_iso1 =  util::toIso(Point2::new(v_x1, v_y1));
                 let v_iso2 =  util::toIso(Point2::new(v_x2, v_y2));
                 line.draw([v_iso1.x, v_iso1.y, v_iso2.x, v_iso2.y], draw_state, transform, g);
@@ -124,6 +124,7 @@ impl Game {
             clear([0.8, 0.8, 0.3, 1.0], g);
             unsafe {
                 gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::NEAREST as i32);
+                gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::NEAREST as i32);
             }
 
 
@@ -138,14 +139,15 @@ impl Game {
 
     pub fn update(&mut self, args: &UpdateArgs) {
         self.camera.update();
-        
         let (x, y) = util::to2DT(self.mouse.x, self.mouse.y);
         let ref level = self.world.get_level();
         let ref mut scene = self.scene;
-        level.tile_for_pointT(x, y)
-            .and_then(|tile| tile.sprite_id)
-            .and_then(|id| scene.child_mut(id))
-            .map(|sprite| sprite.set_visible(false));
+
+        level.get_view(Point2::new(self.camera.x, self.camera.y), 30.0, 40.0);
+        //level.tile_for_pointT(x, y)
+        //    .and_then(|tile| tile.sprite_id)
+        //    .and_then(|id| scene.child_mut(id))
+        //    .map(|sprite| sprite.set_visible(false));
         //sprite.set_texture(self.texture2.clone());
     }
     
@@ -179,16 +181,16 @@ impl Game {
             */
 
             Press(Keyboard(Left)) | Press(Keyboard(A)) => {
-                self.camera.dx = 10.0;
+                self.camera.dx = 4.0;
             }
             Press(Keyboard(Right)) | Press(Keyboard(D)) => {
-                self.camera.dx = -10.0;
+                self.camera.dx = -4.0;
             }
             Press(Keyboard(Up)) | Press(Keyboard(W)) => {
-                self.camera.dy = 10.0;
+                self.camera.dy = 4.0;
             }
             Press(Keyboard(Down)) | Press(Keyboard(S)) => {
-                self.camera.dy = -10.0;
+                self.camera.dy = -4.0;
             }
 
             Release(Keyboard(Left)) | Release(Keyboard(A)) => {
