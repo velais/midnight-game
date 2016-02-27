@@ -2,3 +2,4 @@ target
 *.swp
 .idea
 .DS_store
+out
