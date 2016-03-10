@@ -26,8 +26,6 @@ pub struct Game {
     scene: Scene<Texture>,
     world: World,
     texture1: Rc<Texture>,
-    texture2: Rc<Texture>,
-    texture3: Rc<Texture>,
     mouse: Point2<f64>,
 }
 
@@ -39,11 +37,11 @@ impl Game {
         let asset_1 = assets.join("dirt_1.png");
         let texture_1 = Rc::new(Texture::from_path(asset_1).unwrap());
 
-        let asset_2 = assets.join("grass_tree_tall_1.png");
-        let texture_2 = Rc::new(Texture::from_path(asset_2).unwrap());
+        //let asset_2 = assets.join("grass_tree_tall_1.png");
+        //let texture_2 = Rc::new(Texture::from_path(asset_2).unwrap());
 
-        let asset_3 = assets.join("dirt_tree_2.png");
-        let texture_3 = Rc::new(Texture::from_path(asset_3).unwrap());
+        //let asset_3 = assets.join("dirt_tree_2.png");
+        //let texture_3 = Rc::new(Texture::from_path(asset_3).unwrap());
 
         let mut scene: Scene<Texture> = Scene::new();
         let mut world = World::new();
@@ -54,8 +52,6 @@ impl Game {
             scene: scene,
             world: world,
             texture1: texture_1.clone(),
-            texture2: texture_2.clone(),
-            texture3: texture_3.clone(),
             mouse: Point2::new(0.0, 0.0),
         }
     }
@@ -72,7 +68,7 @@ impl Game {
                 let mut sprite = match tile.tex_code {
                    0 ... 10 => Sprite::from_texture(self.texture1.clone()),
                    11 ... 18 => Sprite::from_texture(self.texture1.clone()),
-                   19 => Sprite::from_texture(self.texture3.clone()),
+                   19 => Sprite::from_texture(self.texture1.clone()),
                    _ => panic!("aahhh")
                 };
                 let x = (j as f64) * (level.tile_width as f64);
