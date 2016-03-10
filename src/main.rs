@@ -25,7 +25,7 @@ mod camera;
 mod util;
 
 pub fn main() {
-    let opengl = OpenGL::V4_0;
+    let opengl = OpenGL::V3_2;
 
     let mut window: Sdl2Window = WindowSettings::new(
         "Midnight",
