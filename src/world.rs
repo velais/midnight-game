@@ -2,6 +2,7 @@ use uuid::Uuid;
 use cgmath::Point2;
 use rand::{thread_rng, Rng};
 use util;
+use std::num::Wrapping;
 
 pub struct World {
     levels: Vec<Level>
@@ -30,9 +31,9 @@ pub struct Level {
 
 impl Level {
     pub fn new() -> Level {
-        let width = 5;
-        let height = 5;
-        let mut map = Vec::with_capacity(10);
+        let width = 40;
+        let height = 40;
+        let mut map = Vec::with_capacity(width * height);
         for i in 0..(width * height) {
             map.push(Tile::new());
         }
@@ -55,15 +56,18 @@ impl Level {
     pub fn tile_for_pointT(&self, x: f64, y: f64) -> Option<&Tile> {
         let col = (x as usize / self.tile_width) as usize;
         let row = (y as usize / self.tile_height) as usize;
-        let index = (row * self.width) + col;
-        self.map.get(index)
+        //println!("{}, {}", row, col);
+        let index = (row.wrapping_mul(self.width)).wrapping_add(col);
+        self.map.get(index as usize)
     }
 
-    pub fn get_view(&self, pt: Point2<f64>, width: f64, height: f64) {
+    pub fn get_view(&self, pt: Point2<f64>, width: f64, height: f64) -> Option<Uuid> {
         let map_pt = util::to2D(pt);
-        let x = map_pt.x / self.tile_width as f64;
-        let y = map_pt.y / (self.tile_height * 2) as f64;
+        let x = map_pt.x; //% self.tile_width as f64;
+        let y = map_pt.y; //% self.tile_height as f64;
+        let tile = self.tile_for_pointT(x, y);
         println!("{} {}", x, y);
+        tile.and_then(|t| t.sprite_id)
     }
 }
 

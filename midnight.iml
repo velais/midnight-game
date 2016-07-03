@@ -1,5 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="midnight" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="Cargo" type="RUST_EXECUTABLE_MODULE" version="4">
+<module external.linked.project.id="midnight" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="Cargo" type="RUST_MODULE" version="4">
+  <component name="CargoModuleData">
+    <option name="myTargets">
+      <list>
+        <SerializableTarget>
+          <option name="kind" value="BIN" />
+          <option name="path" value="src/main.rs" />
+        </SerializableTarget>
+        <SerializableTarget>
+          <option name="kind" value="TEST" />
+          <option name="path" value="tests/main.rs" />
+        </SerializableTarget>
+      </list>
+    </option>
+    <option name="myExternCrates">
+      <list>
+        <SerializableExternCrate>
+          <option name="name" value="pistoncore_sdl2_window" />
+          <option name="path" value="$USER_HOME$/.cargo/registry/src/github.com-88ac128001ac3a9a/pistoncore-sdl2_window-0.23.0/src/lib.rs" />
+        </SerializableExternCrate>
+        <SerializableExternCrate>
+          <option name="name" value="piston2d_sprite" />
+          <option name="path" value="$USER_HOME$/.cargo/registry/src/github.com-88ac128001ac3a9a/piston2d-sprite-0.20.0/./src/lib.rs" />
+        </SerializableExternCrate>
+        <SerializableExternCrate>
+          <option name="name" value="fps_counter" />
+          <option name="path" value="$USER_HOME$/.cargo/registry/src/github.com-88ac128001ac3a9a/fps_counter-0.2.0/src/lib.rs" />
+        </SerializableExternCrate>
+        <SerializableExternCrate>
+          <option name="name" value="find_folder" />
+          <option name="path" value="$USER_HOME$/.cargo/registry/src/github.com-88ac128001ac3a9a/find_folder-0.3.0/src/lib.rs" />
+        </SerializableExternCrate>
+        <SerializableExternCrate>
+          <option name="name" value="cgmath" />
+          <option name="path" value="$USER_HOME$/.cargo/registry/src/github.com-88ac128001ac3a9a/cgmath-0.7.0/src/lib.rs" />
+        </SerializableExternCrate>
+        <SerializableExternCrate>
+          <option name="name" value="piston2d_graphics" />
+          <option name="path" value="$USER_HOME$/.cargo/registry/src/github.com-88ac128001ac3a9a/piston2d-graphics-0.13.1/./src/lib.rs" />
+        </SerializableExternCrate>
+        <SerializableExternCrate>
+          <option name="name" value="piston2d_opengl_graphics" />
+          <option name="path" value="$USER_HOME$/.cargo/registry/src/github.com-88ac128001ac3a9a/piston2d-opengl_graphics-0.23.0/src/lib.rs" />
+        </SerializableExternCrate>
+        <SerializableExternCrate>
+          <option name="name" value="rand" />
+          <option name="path" value="$USER_HOME$/.cargo/registry/src/github.com-88ac128001ac3a9a/rand-0.3.14/src/lib.rs" />
+        </SerializableExternCrate>
+        <SerializableExternCrate>
+          <option name="name" value="uuid" />
+          <option name="path" value="$USER_HOME$/.cargo/registry/src/github.com-88ac128001ac3a9a/uuid-0.1.18/src/lib.rs" />
+        </SerializableExternCrate>
+        <SerializableExternCrate>
+          <option name="name" value="piston" />
+          <option name="path" value="$USER_HOME$/.cargo/registry/src/github.com-88ac128001ac3a9a/piston-0.17.0/./src/lib.rs" />
+        </SerializableExternCrate>
+        <SerializableExternCrate>
+          <option name="name" value="sdl2" />
+          <option name="path" value="$USER_HOME$/.cargo/registry/src/github.com-88ac128001ac3a9a/sdl2-0.13.0/src/sdl2/lib.rs" />
+        </SerializableExternCrate>
+        <SerializableExternCrate>
+          <option name="name" value="gl" />
+          <option name="path" value="$USER_HOME$/.cargo/registry/src/github.com-88ac128001ac3a9a/gl-0.5.2/src/lib.rs" />
+        </SerializableExternCrate>
+      </list>
+    </option>
+  </component>
+  <component name="CargoModuleTargets">
+    <option name="myTargets">
+      <list>
+        <SerializableTarget>
+          <option name="kind" value="BIN" />
+          <option name="path" value="src/main.rs" />
+        </SerializableTarget>
+        <SerializableTarget>
+          <option name="kind" value="TEST" />
+          <option name="path" value="tests/main.rs" />
+        </SerializableTarget>
+      </list>
+    </option>
+  </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -7,20 +87,23 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/benches" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Cargo: sdl2 0.13.0" level="project" />
-    <orderEntry type="library" name="Cargo: piston2d-graphics 0.13.1" level="project" />
-    <orderEntry type="library" name="Cargo: piston 0.17.0" level="project" />
-    <orderEntry type="library" name="Cargo: piston2d-opengl_graphics 0.23.0" level="project" />
     <orderEntry type="library" name="Cargo: pistoncore-sdl2_window 0.23.0" level="project" />
-    <orderEntry type="library" name="Cargo: fps_counter 0.2.0" level="project" />
-    <orderEntry type="library" name="Cargo: find_folder 0.3.0" level="project" />
     <orderEntry type="library" name="Cargo: piston2d-sprite 0.20.0" level="project" />
-    <orderEntry type="library" name="Cargo: uuid 0.1.18" level="project" />
+    <orderEntry type="library" name="Cargo: find_folder 0.3.0" level="project" />
+    <orderEntry type="library" name="Cargo: piston 0.17.0" level="project" />
+    <orderEntry type="library" name="Cargo: piston2d-graphics 0.13.1" level="project" />
     <orderEntry type="library" name="Cargo: cgmath 0.7.0" level="project" />
-    <orderEntry type="library" name="Cargo: rand 0.3.13" level="project" />
+    <orderEntry type="library" name="Cargo: fps_counter 0.2.0" level="project" />
+    <orderEntry type="library" name="Cargo: piston2d-opengl_graphics 0.23.0" level="project" />
     <orderEntry type="library" name="Cargo: gl 0.5.2" level="project" />
+    <orderEntry type="library" name="Cargo: uuid 0.1.18" level="project" />
+    <orderEntry type="library" name="Cargo: rand 0.3.14" level="project" />
+    <orderEntry type="library" name="Rust &lt;midnight&gt;" level="project" />
+    <orderEntry type="library" name="Cargo &lt;midnight&gt;" level="project" />
   </component>
 </module>

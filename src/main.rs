@@ -22,6 +22,8 @@ use cgmath::Point2;
 mod game;
 mod world;
 mod camera;
+mod hud;
+mod resource;
 mod util;
 
 pub fn main() {
@@ -30,6 +32,7 @@ pub fn main() {
     let mut window: Sdl2Window = WindowSettings::new(
         "Midnight",
         Size { width: 640, height: 480 })
+        .samples(8)
         .exit_on_esc(true)
         .opengl(opengl)
         .build()
@@ -50,8 +53,11 @@ pub fn main() {
             Event::Render(args) => {
                 let fps = fps_counter.tick();
                 let title = format!(
-                    "Midnight FPS: {}",
-                    fps);
+                    "Midnight FPS: {}, CAMERA: {} {}",
+                    fps,
+                    game.camera.x,
+                    game.camera.y
+                );
                 window.set_title(title);
 
                 game.render(&args, &mut gl);
