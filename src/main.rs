@@ -15,8 +15,10 @@ use sdl2_window::{ Sdl2Window, OpenGL };
 use piston::window::{ Size, Window, AdvancedWindow, OpenGLWindow, WindowSettings };
 use piston::event_loop::{ Events, EventLoop };
 use opengl_graphics::{ GlGraphics, Texture, TextureSettings };
-use game::Game;
 use cgmath::Point2;
+
+use game::Game;
+use hud::Hud;
 
 
 mod game;
@@ -31,7 +33,7 @@ pub fn main() {
 
     let mut window: Sdl2Window = WindowSettings::new(
         "Midnight",
-        Size { width: 640, height: 480 })
+        Size { width: 1024, height: 768 })
         .samples(8)
         .exit_on_esc(true)
         .opengl(opengl)
@@ -43,9 +45,10 @@ pub fn main() {
     let mut fps_counter = fps_counter::FPSCounter::new();
 
     let mut game = Game::new();
+    let mut hud = Hud::new();
     game.load_scene();
 
-    let mut events = window.events().ups(60).max_fps(10000);
+    let mut events = window.events().ups(60).max_fps(60);
     while let Some(e) = events.next(&mut window) {
         use piston::input::Event;
 
@@ -61,12 +64,15 @@ pub fn main() {
                 window.set_title(title);
 
                 game.render(&args, &mut gl);
+                hud.draw(&args, &mut gl);
             }
             Event::Update(args) => {
                 game.update(&args);
+                hud.update(&game)
             }
             Event::Input(ref input) => {
                 game.input(&input);
+                hud.input(&input);
             }
             _ => {}
         }

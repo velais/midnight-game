@@ -14,7 +14,7 @@ impl Camera {
             y: 0.0,
             dx: 0.0,
             dy: 0.0,
-            zoom: 1.0,
+            zoom: 2.0,
         }
     }
 

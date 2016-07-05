@@ -55,18 +55,17 @@ impl Level {
 
     pub fn tile_for_pointT(&self, x: f64, y: f64) -> Option<&Tile> {
         let col = (x as usize / self.tile_width) as usize;
-        let row = (y as usize / self.tile_height) as usize;
-        //println!("{}, {}", row, col);
-        let index = (row.wrapping_mul(self.width)).wrapping_add(col);
+        let row = (y as usize / self.tile_height / 2) as usize;
+        let index = (row.wrapping_mul(self.height)).wrapping_add(col);
         self.map.get(index as usize)
     }
 
     pub fn get_view(&self, pt: Point2<f64>, width: f64, height: f64) -> Option<Uuid> {
-        let map_pt = util::to2D(pt);
+        let map_pt = util::to2D(Point2::new(pt.x - 5.0, pt.y));
         let x = map_pt.x; //% self.tile_width as f64;
         let y = map_pt.y; //% self.tile_height as f64;
         let tile = self.tile_for_pointT(x, y);
-        println!("{} {}", x, y);
+        //println!("{} {}", x, y);
         tile.and_then(|t| t.sprite_id)
     }
 }

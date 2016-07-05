@@ -1,10 +1,10 @@
 extern crate piston;
 extern crate opengl_graphics;
-extern crate find_folder;
 extern crate sprite;
 extern crate graphics;
 
 use std::rc::Rc;
+use std::collections::HashMap;
 
 use sprite::*;
 use opengl_graphics::{ Texture, GlGraphics };
@@ -19,7 +19,6 @@ use cgmath::Point2;
 
 use world::World;
 use camera::Camera;
-use hud::Hud;
 use resource::Resources;
 use util;
 
@@ -28,63 +27,24 @@ pub struct Game {
     pub camera: Camera,
     scene: Scene<Texture>,
     world: World,
-    hud: Hud,
-    texture1: Rc<Texture>,
-    texture2: Rc<Texture>,
     resources: Rc<Resources>,
     mouse: Point2<f64>,
 }
 
 impl Game {
     pub fn new() -> Game {
-        let assets = find_folder::Search::ParentsThenKids(3, 3)
-            .for_folder("assets").unwrap();
 
-        let asset_1 = assets.join("dirt_1.png");
-        let texture_1 = Rc::new(Texture::from_path(asset_1).unwrap());
-
-        let asset_2 = assets.join("dirt_2.png");
-        let texture_2 = Rc::new(Texture::from_path(asset_2).unwrap());
-
-        //let asset_3 = assets.join("dirt_tree_2.png");
-        //let texture_3 = Rc::new(Texture::from_path(asset_3).unwrap());
-
-        let mut resources = Resources {
-            font: GlyphCache::new(assets.join("fonts/FiraMono-Bold.ttf")).unwrap()
-        };
-
+        let mut resources = Resources::new();
         let resources_rc = Rc::new(resources);
 
         let mut scene: Scene<Texture> = Scene::new();
         let mut world = World::new();
         let mut camera = Camera::new();
-        let mut hud = Hud::new();
-
-        let pt = Point2::new(10.0, 15.0);
-        println!("{}, {}", pt.x, pt.y);
-        let pt_iso = util::toIso(pt);
-        println!("{}, {}", pt_iso.x, pt_iso.y);
-        let pt_back = util::to2D(pt_iso);
-        println!("{}, {}", pt_back.x, pt_back.y);
-
-
-        println!("------------");
-        let (a, b) = (10.0, 15.0);
-        println!("{}, {}", a, b);
-        let (a_iso, b_iso) = util::toIsoT(a, b);
-        println!("{}, {}", a_iso, b_iso);
-        let (a_back, b_back) = util::to2DT(a_iso, b_iso);
-        println!("{}, {}", a_back, b_back);
-
-
 
         Game {
             camera: camera,
             scene: scene,
             world: world,
-            hud: hud,
-            texture1: texture_1.clone(),
-            texture2: texture_2.clone(),
             resources: resources_rc.clone(),
             mouse: Point2::new(0.0, 0.0),
         }
@@ -102,9 +62,9 @@ impl Game {
                 let index = (i * level.width) + j;
                 let mut tile = level.map.get_mut(index).unwrap();
                 let mut sprite = match tile.tex_code {
-                   0 ... 10 => Sprite::from_texture(self.texture1.clone()),
-                   11 ... 18 => Sprite::from_texture(self.texture2.clone()),
-                   19 => Sprite::from_texture(self.texture1.clone()),
+                   0 ... 10 => self.resources.textures.get("dirt1").map(|tx| Sprite::from_texture(tx.clone())).unwrap(),
+                   11 ... 18 => self.resources.textures.get("dirt2").map(|tx| Sprite::from_texture(tx.clone())).unwrap(),
+                   19 => self.resources.textures.get("dirt1").map(|tx| Sprite::from_texture(tx.clone())).unwrap(),
                    _ => panic!("aahhh")
                 };
                 let x = (j as f64) * (level.tile_width as f64);
@@ -112,7 +72,7 @@ impl Game {
                 let iso_pt = util::toIso(Point2::new(x, y));
                 sprite.set_anchor(0.0, 0.0);
                 sprite.set_position(iso_pt.x, iso_pt.y);
-                sprite.set_visible(false);
+                sprite.set_visible(true);
                 let id = self.scene.add_child(sprite);
                 tile.set_sprite_id(id);
 
@@ -167,8 +127,6 @@ impl Game {
 
             self.scene.draw(transform, g);
 
-            self.hud.draw(c, g);
-
             //self.draw_grid(line, &c.draw_state, transform, g);
         });
     }
@@ -198,13 +156,27 @@ impl Game {
 
         match *input {
             Move(MouseCursor(x, y)) =>  {
-                self.mouse.x = x;
-                self.mouse.y = y;
+
+                let old_tx = self.resources.textures.get("dirt2").unwrap();
+                let new_tx = self.resources.textures.get("dirt3").unwrap();
 
                 let ref level = self.world.get_level();
                 let ref mut scene = self.scene;
-                let sid = level.get_view(Point2::new(x + self.camera.x, y + self.camera.y), 30.0, 40.0);
-                sid.map(|id| scene.child_mut(id).map(|sprite| sprite.set_visible(true)));
+
+                let old_sid = level.get_view(Point2::new((self.mouse.x - self.camera.x) / self.camera.zoom, (self.mouse.y - self.camera.y) / self.camera.zoom), 30.0, 40.0);
+                old_sid.map(|id| scene.child_mut(id).map(|sprite| {
+                    //sprite.set_visible(false)
+                    sprite.set_texture(old_tx.clone());
+                }));
+
+                self.mouse.x = x;
+                self.mouse.y = y;
+
+                let sid = level.get_view(Point2::new((x - self.camera.x) / self.camera.zoom, (y - self.camera.y) / self.camera.zoom), 30.0, 40.0);
+                sid.map(|id| scene.child_mut(id).map(|sprite| {
+                    //sprite.set_visible(false)
+                    sprite.set_texture(new_tx.clone());
+                }));
             }
             /*
             Press(Mouse(LeftMouseButton)) => {
@@ -223,16 +195,16 @@ impl Game {
             */
 
             Press(Keyboard(Left)) | Press(Keyboard(A)) => {
-                self.camera.dx = 4.0;
+                self.camera.dx = 5.0;
             }
             Press(Keyboard(Right)) | Press(Keyboard(D)) => {
-                self.camera.dx = -4.0;
+                self.camera.dx = -5.0;
             }
             Press(Keyboard(Up)) | Press(Keyboard(W)) => {
-                self.camera.dy = 4.0;
+                self.camera.dy = 5.0;
             }
             Press(Keyboard(Down)) | Press(Keyboard(S)) => {
-                self.camera.dy = -4.0;
+                self.camera.dy = -5.0;
             }
 
             Release(Keyboard(Left)) | Release(Keyboard(A)) => {
@@ -249,10 +221,10 @@ impl Game {
             }
 
             Press(Keyboard(Equals)) => {
-                self.camera.zoom += 0.1;
+                self.camera.zoom *= 2.0;
             }
             Press(Keyboard(Minus)) => {
-                self.camera.zoom -= 0.1;
+                self.camera.zoom /= 2.0;
             }
 
             Press(Keyboard(R)) => {
@@ -265,6 +237,7 @@ impl Game {
                 println!("Reloading scene");
                 self.load_scene();
             }
+
 
             _ => {}
         }
