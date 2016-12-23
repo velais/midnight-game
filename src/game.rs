@@ -112,14 +112,7 @@ impl Game {
 
     pub fn render(&mut self, args: &RenderArgs, gl: &mut GlGraphics) {
         use graphics::*;
-        //let line = &Line::new([0.2, 0.2, 0.2, 0.9], 0.5);
         gl.draw(args.viewport(), |c, g| {
-            clear([0.8, 0.8, 0.3, 1.0], g);
-            unsafe {
-                gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::NEAREST as i32);
-                gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::NEAREST as i32);
-            }
-
 
             let transform = c.transform
                 .trans(self.camera.x, self.camera.y)
@@ -127,6 +120,7 @@ impl Game {
 
             self.scene.draw(transform, g);
 
+            //let line = &Line::new([0.2, 0.2, 0.2, 0.9], 0.5);
             //self.draw_grid(line, &c.draw_state, transform, g);
         });
     }

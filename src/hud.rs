@@ -1,5 +1,6 @@
 extern crate find_folder;
 extern crate fps_counter;
+extern crate opengl_graphics;
 
 use std::rc::Rc;
 use std::collections::HashMap;
@@ -9,6 +10,7 @@ use opengl_graphics::glyph_cache::GlyphCache;
 use graphics::math::{ Matrix2d };
 use graphics::*;
 use piston::input::{ Input, RenderArgs };
+use gl;
 
 use game::Game;
 use camera::Camera;

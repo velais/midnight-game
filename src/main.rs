@@ -9,12 +9,14 @@ extern crate sprite;
 extern crate uuid;
 extern crate cgmath;
 extern crate rand;
+extern crate image;
 
 
 use sdl2_window::{ Sdl2Window, OpenGL };
 use piston::window::{ Size, Window, AdvancedWindow, OpenGLWindow, WindowSettings };
 use piston::event_loop::{ Events, EventLoop };
 use opengl_graphics::{ GlGraphics, Texture, TextureSettings };
+use graphics::Graphics;
 use cgmath::Point2;
 
 use game::Game;
@@ -62,6 +64,8 @@ pub fn main() {
                     game.camera.y
                 );
                 window.set_title(title);
+
+                gl.clear_color([0.2, 0.2, 0.2, 1.0]);
 
                 game.render(&args, &mut gl);
                 hud.draw(&args, &mut gl);
